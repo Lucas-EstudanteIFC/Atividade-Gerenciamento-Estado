@@ -10,5 +10,22 @@ export const useProductStore = defineStore('Product', () => {
     {id: 5, name: 'O Zorro', price: 49.9, qty: 90},
   ]);
 
-  return { products };
+
+  function getProductById(id) {
+    for (let product of products.value) {
+      if (product.id == id) {
+        return product
+      }
+      
+    }
+    return null;
+    // return products.value.find((product) => product.id == id);
+  }
+
+  function deleteProductById(id) {
+   const position = products.value.findIndex((product) => product.id == id);
+   products.value.splice(position, 1);
+  }
+
+  return { products, getProductById, deleteProductById};
 })
