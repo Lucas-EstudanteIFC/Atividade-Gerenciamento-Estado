@@ -1,6 +1,7 @@
 <script setup>
 import { useRouter } from 'vue-router';
 import { useProductStore } from '@/stores/product';
+import { ref, reactive } from 'vue';
 const productStore = useProductStore();
 const router = useRouter();
 
@@ -8,31 +9,38 @@ function visualizar(id) {
   router.push(`/produto/${id}`)
 }
 
-const ultimoId = ref(6);
-const novoProduto = ref({
-  id: 0, name: " ", price: 0, qty: 0
-})
+const newProduct = reactive({ id: 0, name: '', price: 0, qty: 0 });
+
+const lastID = ref(productStore.products.length + 1);
+const newId = lastID.value;
 
 function adicionarProduto() {
-  novoProduto.value.id = ultimoId;
-  productStoreproducts.value.push(novoProduto.value);
-}
+  newProduct['id'] = newId;
+  productStore.products.push(newProduct);
+};
+
 
 </script>
 
 <template>
   <h1>Formulario de produto</h1>
-  <form action="@submit.prevent">
+  <form @submit.prevent="adicionarProduto">
     <label for="">Nome</label>
-    <input type="text" v-model="novoProduto.value.name">
-
+    <input type="text" v-model="newProduct['name']">
+    <br>
     <label for="">Preço</label>
-    <input type="number" v-model="novoProduto.value.price">
-
+    <input type="number" v-model="newProduct['price']">
+    <br>
     <label for="">Quantidade</label>
-    <input type="number" v-model="novoProduto.value.qty">
-    <button @click="adicionarProduto"></button>
+    <input type="number" v-model="newProduct['qty']">
+    <br>
+    <button type="submit">Adicionar Produto</button>
+
   </form>
+  <p>{{ productStore.products.length }}</p>
+
+  <p> {{ newProduct }}</p>
+  <hr>
   <h1>Listagem de Produtos</h1>
   <table>
     <thead>
